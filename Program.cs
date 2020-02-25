@@ -1,4 +1,6 @@
-﻿using System;
+//WARNING this code is not working
+
+using System;
 using System.Text;
 using System.Data.SqlClient;
 
@@ -33,7 +35,7 @@ namespace Taty
                 string name1 = @name1;
                 // READ Filter
                 Console.ReadKey(true);
-                sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Name Like @name1;";
+                sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Name LIKE" + @name1+")";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
 
@@ -78,7 +80,7 @@ namespace Taty
 
                     // READ Filter
                     Console.ReadKey(true);
-                    sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Age Like @age1;";
+                    sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Age LIKE"+ @age1+")";
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
 
