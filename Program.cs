@@ -1,134 +1,142 @@
-//WARNING this code is not working
-
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms; 
 using System.Data.SqlClient;
 
-namespace Taty
+namespace Me
 {
-    class Program
+    public partial class Form1 : Form
     {
-        static void Main(string[] args)
+        public Form1()
+        { 
+            InitializeComponent();
+            
+        }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            textBox1.Visible = true;
+            textBox2.Visible = false;
+            button4.Visible = true;
+            button3.Visible = false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox2.Visible = true;
+            textBox1.Visible = false;
+            button4.Visible = false;
+            button3.Visible = true;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            string age1 = textBox2.Text;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string name1 = textBox1.Text;
             // Build connection string
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "localhost";   // update me
-            builder.UserID = "sa";              // update me
-            builder.Password = "nadya";      // update me
+            builder.DataSource = "localhost";
+            builder.UserID = "sa";
+            builder.Password = "nadya";      
             builder.InitialCatalog = "Students";
+            
 
-            // Connect to SQL
-            Console.Write("Connecting to SQL Server ... ");
+            
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-                connection.Open();
-                Console.WriteLine("Done.");
-
-                // Create a sample database
-                String sql = "Students";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-           //Name.......
-                    Console.WriteLine("Find Name ");
-                    //Console.WriteLine(Console.ReadLine());
-                    string @name1 = Console.ReadLine();
-                string name1 = @name1;
-                // READ Filter
-                Console.ReadKey(true);
-                sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Name LIKE" + @name1+")";
-                using (SqlCommand command = new SqlCommand(sql, connection))
+                try
                 {
+                    connection.Open();
+          
+                        SqlCommand command;
+                        SqlDataReader dataReader;
+                        String sql ,Output="";
 
-                    using (
-                        SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
+                        sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Name LIKE '" + name1 + "%'";
+                        command = new SqlCommand(sql,connection);
+
+                        dataReader = command.ExecuteReader();
                         {
-                            Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), reader.GetString(3), reader.GetString(4));
+                            while (dataReader.Read())
+                            {
+                                Output = Output + dataReader.GetString(0) +"-"+ dataReader.GetString(1) + "-" + dataReader.GetDecimal(2) + "-" + dataReader.GetString(3) + "-" + dataReader.GetString(4) + Environment.NewLine;
+                            }
                         }
-                    }
+                        label2.Text=Output;
+
+                    
                 }
-                if (string.IsNullOrEmpty(name1))
+
+                finally
                 {
-                    try
-                    {
-                                // READ demo
-                                Console.WriteLine("Reading data from table, press any key to continue...");
-                            Console.ReadKey(true);
-                            sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info;";
-                            using (SqlCommand command = new SqlCommand(sql, connection))
-                            {
-
-                                using (SqlDataReader reader = command.ExecuteReader())
-                                {
-                                    while (reader.Read())
-                                    {
-                                        Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), reader.GetString(3), reader.GetString(4));
-                                    }
-                                }
-                            }
-                        
-                    }
-                    catch (SqlException e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-              //Age......
-                    Console.WriteLine("Find Age ");
-                    //Console.WriteLine(Console.ReadLine());
-                    string age1 = Console.ReadLine();
-
-                    // READ Filter
-                    Console.ReadKey(true);
-                    sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Age LIKE"+ @age1+")";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-
-                        using (
-                            SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), reader.GetString(3), reader.GetString(4));
-                            }
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(name1))
-                    {
-                        try
-                        {
-                            // READ demo
-                            Console.WriteLine("Reading data from table, press any key to continue...");
-                            Console.ReadKey(true);
-                            sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info;";
-                            using (SqlCommand command = new SqlCommand(sql, connection))
-                            {
-
-                                using (SqlDataReader reader = command.ExecuteReader())
-                                {
-                                    while (reader.Read())
-                                    {
-                                        Console.WriteLine("{0} {1} {2} {3} {4}", reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), reader.GetString(3), reader.GetString(4));
-                                    }
-                                }
-                            }
-                        }
-
-
-                        catch (SqlException e)
-                        {
-                            Console.WriteLine(e.ToString());
-                        }
-
-
-                        Console.WriteLine("All done. Press any key to finish...");
-                        Console.ReadKey(true);
-                    }
+                    connection.Close();
                 }
             }
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string age1 = textBox2.Text;
+            // Build connection string
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = "localhost";
+            builder.UserID = "sa";
+            builder.Password = "nadya";
+            builder.InitialCatalog = "Students";
+
+
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    SqlCommand command;
+                    SqlDataReader dataReader;
+                    String sql, Output1 = "";
+
+                    sql = "SELECT Name ,Age ,Class ,[Class letter] ,Number FROM dbo.Info WHERE Age LIKE '" + age1 + "%'";
+                    command = new SqlCommand(sql, connection);
+
+                    dataReader = command.ExecuteReader();
+                    {
+                        while (dataReader.Read())
+                        {
+                            Output1 = Output1 + dataReader.GetString(0) + "-" + dataReader.GetString(1) + "-" + dataReader.GetDecimal(2) + "-" + dataReader.GetString(3) + "-" + dataReader.GetString(4) + Environment.NewLine;
+                        }
+                    }
+                    label2.Text = Output1;
+
+
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
         }
     }
+
 }
 
 
